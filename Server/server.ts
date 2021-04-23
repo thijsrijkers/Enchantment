@@ -3,27 +3,32 @@
 
 //use this for module: npm install @types/node --save-
 import * as net from 'net';
+import * as wp from 'workerpool'
+
+const workerpool = wp.pool()
 
 const PORT = 3000
 const IP = '127.0.0.1'
 const BACKLOG = 100
 
-//TODO: Fix that Node keeps running when someone tries to refresh there minecraft client.
 net.createServer()
   .listen(PORT, IP, BACKLOG)
-  .on('connection', socket => socket  
-	.on('data', buffer => {
-		console.log('Connection Made')
-		const request = buffer.toString()
-		socket.write(compileResponse({
-		protocol: 'HTTP/1.1',
-		headers: new Map(),
-		status: 'OK',
-		statusCode: 200,
-		body: `Test`
-	}))
-	socket.end()
-}))
+  .on('connection', socket => {
+    console.log('new connection')
+    socket
+      .on('data', buffer => {
+        console.log('data')
+        workerpool.exec(() => fibonacci(100), [])
+          .then(res => {
+            socket.write(res)
+            console.log('done with connection')
+            socket.end()
+		})
+	})
+})
+
+const fibonacci = (n: number) => (n < 2) ? n
+  : fibonacci(n - 2) + fibonacci(n - 1)
 
 export interface Request {
 	protocol: string
