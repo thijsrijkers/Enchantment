@@ -40,7 +40,8 @@ console.log("\n" +
 "▀███▀   █  █ █ ▀███▀     █     █ █  █ █  ▀         █  ▀███▀   █  █ █  ▀ \n" +
 "        █   ██          ▀     █  █   ██           ▀           █   ██\n" +
 "                             ▀ \n\n");
-                                                                                                                    
+
+//TODO: socket.end() crashes the nodejs server
 server.on("connection", socket => {
     console.log('A new connection')
 
@@ -53,7 +54,7 @@ server.on("connection", socket => {
               }))
 
             console.log('done with connection')
-            socket.end()
+            //socket.end()
         }, waitTime );
     })
 });
